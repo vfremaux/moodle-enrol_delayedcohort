@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -62,6 +61,9 @@ if (empty($enrols)) {
 
         $editurl = new moodle_url('/enrol/delayedcohort/edit.php', array('courseid' => $e->courseid, 'id' => $e->id, 'sesskey' => sesskey(), 'return' => 'planner'));
         $cmd = '<a href="'.$editurl.'"><img src="'.$OUTPUT->pix_url('t/edit').'" /></a>';
+
+        $deleteurl = new moodle_url('/enrol/delayedcohort/planner.php', array('what' => 'delete', 'id' => $e->id, 'sesskey' => sesskey()));
+        $cmd .= ' <a href="'.$deleteurl.'" style="float:right"><img src="'.$OUTPUT->pix_url('t/delete').'"></a></div>';
         $row[] = $cmd;
         
         $table->data[] = $row;

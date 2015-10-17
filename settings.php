@@ -25,9 +25,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+//--- general settings -----------------------------------------------------------------------------------
+$ADMIN->add('enrolments', new admin_externalpage('enrolplanner', get_string('delayedcohortsplanner', 'enrol_delayedcohort'), "{$CFG->wwwroot}/enrol/delayedcohort/planner.php"));
+
 if ($ADMIN->fulltree) {
 
-    //--- general settings -----------------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('enrol_delayedcohort_settings', '', get_string('pluginname_desc', 'enrol_delayedcohort')));
 
 
@@ -40,8 +42,10 @@ if ($ADMIN->fulltree) {
             get_string('defaultrole', 'role'), '', $student->id, $options));
 
         $options = array(
-            ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'enrol'),
+            ENROL_EXT_REMOVED_UNENROL => get_string('extremovedunenrol', 'enrol'),
             ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'enrol'));
         $settings->add(new admin_setting_configselect('enrol_delayedcohort/unenrolaction', get_string('extremovedaction', 'enrol'), get_string('extremovedaction_help', 'enrol'), ENROL_EXT_REMOVED_UNENROL, $options));
+
+        $settings->add(new admin_setting_configtext('enrol_delayedcohort/notifyto', get_string('notifyto', 'enrol_delayedcohort'), get_string('notifyto_help', 'enrol_delayedcohort'), ''));
     }
 }

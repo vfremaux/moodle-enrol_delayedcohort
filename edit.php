@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Adds new instance of enrol_cohort to specified course.
+ * Adds new instance of enrol_delayedcohort to specified course.
  *
  * @package enrol_delayedcohort
  * @copyright 2010 Petr Skoda {@link http://skodak.org}
@@ -29,6 +29,8 @@ require_once($CFG->dirroot.'/enrol/delayedcohort/locallib.php');
 require_once($CFG->dirroot.'/group/lib.php');
 
 $courseid = required_param('courseid', PARAM_INT);
+$cohortid = optional_param('cohortid', 0, PARAM_INT);
+$categoryid = optional_param('category', 0, PARAM_INT);
 $instanceid = optional_param('id', 0, PARAM_INT);
 $return = optional_param('return', '', PARAM_TEXT);
 
@@ -45,15 +47,16 @@ $PAGE->set_pagelayout('admin');
 if (!empty($return)) {
     // Check security here as only site admin can use global planner.
     if (has_capability('moodle/site:config', context_system::instance())) {
-        if (strpos('_', $return) !== false) {
-            list($return, $view) = explode('_', $return);
-            $returnurl = new moodle_url('/enrol/delayedcohort/planner.php', array('view' => $view));
+        if (strpos($return, '_') !== false) {
+            list($returnfoo, $view) = explode('_', $return);
+            $returnurl = new moodle_url('/enrol/delayedcohort/planner.php', array('view' => $view, 'category' => $categoryid));
         } else {
-            $returnurl = new moodle_url('/enrol/delayedcohort/planner.php');
+            $returnurl = new moodle_url('/enrol/delayedcohort/planner.php', array('category' => $categoryid));
         }
     }
+} else {
+    $returnurl = new moodle_url('/enrol/instances.php', array('id' => $course->id));
 }
-$returnurl = new moodle_url('/enrol/instances.php', array('id' => $course->id));
 
 if (!enrol_is_enabled('delayedcohort')) {
     redirect($returnurl);
@@ -76,6 +79,7 @@ if ($instanceid) {
     $instance->enrol      = 'delayedcohort';
     $instance->customint1 = ''; // Cohort id.
     $instance->customint2 = 0;  // Optional group id.
+    $instance->customchar4 = 0;  // Optional unenrol on end.
 }
 
 // Try and make the manage instances node on the navigation active.
@@ -90,7 +94,7 @@ $mform = new enrol_delayedcohort_edit_form(null, array($instance, $enrol, $cours
 if ($mform->is_cancelled()) {
     redirect($returnurl);
 
-} else if ($data = $mform->get_data()) {
+} elseif ($data = $mform->get_data()) {
     if ($data->id) {
         // NOTE: no cohort changes here!!!
         if ($data->roleid != $instance->roleid) {
@@ -103,10 +107,21 @@ if ($mform->is_cancelled()) {
         $instance->customint2   = $data->customint2;
         $instance->customint3   = $data->customint3; // trigger date
         $instance->customint4   = $data->customint4; // end date
+        $instance->customchar1   = (!empty($data->customchar1)) ? 1 : 0; // do unenrol on passed end
         $instance->timemodified = time();
         $DB->update_record('enrol', $instance);
     }  else {
-        $enrol->add_instance($course, array('name' => $data->name, 'status' => $data->status, 'customint1' => $data->customint1, 'roleid' => $data->roleid, 'customint2' => $data->customint2));
+        $enrolid = $enrol->add_instance($course, array('name' => $data->name, 'status' => $data->status, 'customint1' => $data->customint1, 'roleid' => $data->roleid, 'customint2' => $data->customint2, 'customint3' => $data->customint3, 'customint4' => $data->customint4, 'customchar1' => !empty($data->customchar1) ? 1 : 0));
+
+        $params = array(
+            'context' => context_course::instance($course->id),
+            'objectid' => $enrolid,
+            'other' => array(
+                'courseid' => $course->id,
+            ),
+        );
+        $event = \enrol_delayedcohort\event\delayedcohort_created::create($params);
+        $event->trigger();
     }
     $trace = new null_progress_trace();
     enrol_delayedcohort_sync($trace, $course->id);
@@ -116,6 +131,17 @@ if ($mform->is_cancelled()) {
 
 $PAGE->set_heading($course->fullname);
 $PAGE->set_title(get_string('pluginname', 'enrol_delayedcohort'));
+
+$data = new StdClass();
+$data->return = $return;
+$data->category = $categoryid;
+
+if ($cohortid) {
+    $data->customint1 = $cohortid;
+    $cohortname = $DB->get_field('cohort', 'name', array('id' => $cohortid));
+    $data->name = $course->shortname.' - '.$cohortname.' ('.get_string('delayed', 'enrol_delayedcohort').')';
+}
+$mform->set_data($data);
 
 echo $OUTPUT->header();
 $mform->display();

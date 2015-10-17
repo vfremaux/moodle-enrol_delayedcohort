@@ -31,15 +31,28 @@ require_once($CFG->dirroot.'/group/lib.php');
 $context = context_system::instance();
 $PAGE->set_context($context);
 $view = optional_param('view', 'bycourse', PARAM_TEXT);
+$action = optional_param('what', '', PARAM_TEXT);
 
 require_login();
-require_capability('moodle/site:config', $context);
+require_capability('enrol/delayedcohort:plan', $context);
 $renderer = $PAGE->get_renderer('enrol_delayedcohort');
 
 $url = new moodle_url('/enrol/delayedcohort/planner.php', array('view' => $view));
 $PAGE->set_url($url);
 $PAGE->set_heading(get_string('pluginname', 'enrol_delayedcohort'));
-$PAGE->set_pagelayout('admin');
+$PAGE->set_pagelayout('base');
+$PAGE->navbar->add(get_string('pluginname', 'enrol_delayedcohort'));
+
+if ($action) {
+    include($CFG->dirroot.'/enrol/delayedcohort/planner.controller.php');
+}
+
+if (!enrol_is_enabled('delayedcohort')) {
+    echo $OUTPUT->header();
+    echo $OUTPUT->box(get_string('notenabled', 'enrol_delayedcohort'));
+    echo $OUTPUT->footer();
+    die;
+}
 
 switch ($view) {
     case 'bycourse':

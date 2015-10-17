@@ -39,7 +39,7 @@ echo $renderer->tabs();
 echo $OUTPUT->heading(get_string('cohortsplanner', 'enrol_delayedcohort'));
 
 if (!$cohorts = $DB->get_records('cohort', array(), 'name', '*', $cpage * $pagesize, $pagesize)) {
-    echo $DB->notification('nocohorts', 'enrol_delayedcohort');
+    echo $OUTPUT->notification('nocohorts', 'enrol_delayedcohort');
 }
 
 $category = optional_param('category', 0, PARAM_INT);
@@ -54,7 +54,7 @@ echo $OUTPUT->box_start('', 'delayedcohort-selector');
 echo $renderer->category_selector($url);
 echo $OUTPUT->box_end();
 
-if (!$courses = $DB->get_records_select('course', ' ID != '.SITEID.' '.$categoryclause, $params)) {
+if (!$courses = $DB->get_records_select('course', ' ID != '.SITEID.' '.$categoryclause, $params, 'idnumber')) {
     echo $OUTPUT->box_start('delayedcohort-empty');
     echo $OUTPUT->notification('nocourses', 'enrol_delayedcohort');
     echo $OUTPUT->box_end();
@@ -72,7 +72,8 @@ echo '<th>';
 echo '</th>';
 foreach ($courses as $c) {
     echo '<td>';
-    echo $c->shortname;
+    $courseurl = new moodle_url('/course/view.php', array('id' => $c->id));
+    echo '<a href="'.$courseurl.'">'.format_string($c->shortname).'</a>';
     echo '</td>';
 }
 echo '</tr>';
@@ -83,24 +84,36 @@ $roles = $DB->get_records('role');
 foreach($cohorts as $ch) {
     echo '<tr>';
     echo '<th>';
-    echo $ch->name;
+    echo format_string($ch->name);
+    echo '<br/>';
+    echo '<span class="delayedcohort-smalltext">('.$DB->count_records('cohort_members', array('cohortid' => $ch->id)).' '.get_string('users').')</span>';
     echo '</th>';
     foreach ($courses as $c) {
         $enrols = $DB->get_records('enrol', array('enrol' => 'delayedcohort', 'courseid' => $c->id, 'customint1' => $ch->id));
         echo '<td class="header">';
         if (!empty($enrols)) {
             foreach($enrols as $e) {
-                $class = ($e->customint3 <= time()) ? 'delayedcohort-passed' : 'delayedcohort-future' ;
-                $instanceurl = new moodle_url('/enrol/delayedcohort/edit.php', array('courseid' => $e->courseid, 'id' => $e->id, 'return' => 'planner_bycohort', 'sesskey' => sesskey()));
+                $class = ($e->customint3 <= time()) ? 'delayedcohort-passed' : 'delayedcohort-future';
+                $class = ($e->customint4 < time() && !empty($e->customchar1)) ? 'delayedcohort-over' : $class;
+                $instanceurl = new moodle_url('/enrol/delayedcohort/edit.php', array('courseid' => $e->courseid, 'id' => $e->id, 'cohortid' => $ch->id, 'return' => 'planner_bycohort', 'sesskey' => sesskey(), 'category' => $category));
                 echo '<div class="'.$class.'"><a href="'.$instanceurl.'">';
-                echo (userdate($e->customint3));
+                echo (userdate($e->customint3, '%a %d/%m/%Y %H:%M'));
                 $rolename = role_get_name($roles[$e->roleid]);
-                echo '</a> ('.$rolename.')</div>';
+                echo '</a> ('.$rolename.')';
+                if ($e->customint4) {
+                    if ($e->customchar1) {
+                        echo '<div style="float:left"><img title="'.get_string('endsat', 'enrol_delayedcohort', userdate($e->customint4)).'" src="'.$OUTPUT->pix_url('hasending', 'enrol_delayedcohort').'" /></div>';
+                    } else {
+                        echo '<div style="float:left"><img title="'.get_string('endsatcontinue', 'enrol_delayedcohort', userdate($e->customint4)).'" src="'.$OUTPUT->pix_url('hasendingcontinue', 'enrol_delayedcohort').'" /></div>';
+                    }
+                }
+                $deleteurl = new moodle_url('/enrol/delayedcohort/planner.php', array('what' => 'delete', 'id' => $e->id, 'sesskey' => sesskey(), 'view' => 'bycohort', 'category' => $category));
+                echo '<a href="'.$deleteurl.'" style="float:right" alt="'.get_string('delete').'"><img src="'.$OUTPUT->pix_url('t/delete').'"></a></div>';
             }
         } else {
             $addurl = '';
-            $addurl = new moodle_url('/enrol/delayedcohort/edit.php', array('courseid' => $c->id));
-            echo '<a href="'.$addurl.'"><img src="'.$OUTPUT->pix_url('unplanned', 'enrol_delayedcohort').'"></a>';
+            $addurl = new moodle_url('/enrol/delayedcohort/edit.php', array('courseid' => $c->id, 'cohortid' => $ch->id, 'return' => 'planner_bycohort', 'sesskey' => sesskey(), 'category' => $category));
+            echo '<a href="'.$addurl.'"><img class="enrol-slot" src="'.$OUTPUT->pix_url('unplanned', 'enrol_delayedcohort').'"></a>';
         }
         echo '</td>';
     }

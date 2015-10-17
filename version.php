@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cohort enrolment plugin version specification.
+ * Delayed Cohort enrolment plugin version specification.
  *
  * @package    enrol_delayedcohort
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
+ * @copyright  2015 Valery Fremaux (valery@edunao.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015030801;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2015101703;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2013110500;        // Requires this Moodle version
 $plugin->component = 'enrol_delayedcohort';    // Full name of the plugin (used for diagnostics)
-$plugin->release = '2.6.0 (Build 2015030800)';
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->cron      = 60*60;             // run cron every hour by default, it is not out-of-sync often
+$plugin->release = '2.7.0 (Build 2015101703)';
+$plugin->maturity = MATURITY_BETA;

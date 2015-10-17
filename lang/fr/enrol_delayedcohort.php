@@ -19,23 +19,63 @@
  *
  * @package enrol_delayedcohort
  * @copyright 2010 Petr Skoda {@link http://skodak.org}
- * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
+ * @copyright 2015 Valery Fremaux {@link http://www.edunao.com}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['delayedcohort:plan'] = 'Planifier les cohortes globalement';
 $string['delayedcohort:config'] = 'Configurer les instances d\'inscription différée par cohorte';
 $string['delayedcohort:unenrol'] = 'Désincrire les utilisateurs';
 
-$string['all'] = 'Tous les cours';
 $string['addgroup'] = 'Ajouter au groupe';
 $string['ajaxmore'] = 'Plus...';
+$string['all'] = 'Tous les cours';
 $string['assignrole'] = 'Assigner un rôle';
-$string['triggerdate'] = 'Date d\'exécution';
-$string['enddate'] = 'Date de fin d\'inscription';
+$string['bycohort'] = 'Par cohorte';
+$string['bycourse'] = 'Par cours';
 $string['cohortsearch'] = 'Chercher';
+$string['cohortsplanner'] = 'Cohortes planifiées';
+$string['delayed'] = 'différé';
+$string['delayedcohortsplanner'] = 'Planing des cohortes différées';
+$string['enddate'] = 'Date de fin d\'inscription';
+$string['endsat'] = 'Finit le {$a}';
+$string['endsatcontinue'] = 'Finit le {$a} (sans désinscription)';
+$string['event_delayedcohort_created'] = 'Instance de cohorte différée créée ';
+$string['event_delayedcohort_deleted'] = 'Instance de cohorte différée supprimée ';
+$string['event_delayedcohort_enrolled'] = 'Cohorte différée activée ';
+$string['event_delayedcohort_ended'] = 'Cohort différée désactivée ';
 $string['instanceexists'] = 'La cohorte est déjà synchronisée sur ce rôle';
+$string['noprogrammablecohorts'] = 'Pas de cohortes programmables';
+$string['plannedcourses'] = 'Planning des cours';
 $string['planner'] = 'Planning d\'activation des cohortes';
 $string['pluginname'] = 'Synchronisation différée des cohortes';
 $string['pluginname_desc'] = 'Ce plugin synchronise les inscriptions au cours sur les cohortes à une date programmable.';
 $string['status'] = 'Actif';
-$string['noprogrammablecohorts'] = 'Pas de cohortes programmables';
+$string['triggerdate'] = 'Date d\'exécution';
+$string['unassigned'] = 'Non programmés';
+$string['unplannedcourses'] = 'Cours non assignés';
+$string['unenrolonend'] = 'Désinscrire à la date de fin';
+$string['notifyto'] = 'Notifier à';
+$string['notenabled'] = 'La méthode d\'inscription Cohortes Différées n\'est pas activée dans l\'administration centrale de Moodle.';
+
+$string['notifyto_help'] = 'Si non vide, enverra une notification aux adresses mail mentionnées (liste à virgules) lorsqu\'une activation de cohorte se déclenche';
+
+$string['notifyaction_mail_object'] = '{$a->site}: Activation différée de la cohorte {$a->cohort} dans le cours {$a->shortname}';
+$string['notifyaction_mail_raw'] = '
+Activation différée de cohorte
+-------------------------------
+Les utilisateurs suivants appartenant à la cohorte {$a->cohort} ont été inscrits au cours [{$a->shortname}] {$a->fullname}:
+
+{$a->userlist}
+
+{$a->usermaillist}
+';
+
+$string['notifyaction_mail_html'] = '
+<h2>Activation différée de cohorte</h2>
+<p>Les utilisateurs suivants appartenant à la cohorte <b>{$a->cohort}</b> ont été inscrits au cours <b>[{$a->shortname}] {$a->fullname}</b>:</p>
+
+<p>{$a->userlist}</p>
+
+<p>{$a->usermaillist}</p>
+';

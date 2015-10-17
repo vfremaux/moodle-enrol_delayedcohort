@@ -39,15 +39,20 @@ class enrol_delayedcohort_edit_form extends moodleform {
 
         $enrol = enrol_get_plugin('delayedcohort');
 
-
         $groups = array(0 => get_string('none'));
         foreach (groups_get_all_groups($course->id) as $group) {
             $groups[$group->id] = format_string($group->name, true, array('context' => $coursecontext));
         }
 
+        $mform->addElement('hidden', 'return');
+        $mform->setType('return', PARAM_TEXT);
+
+        $mform->addElement('hidden', 'category');
+        $mform->setType('category', PARAM_INT);
+
         $mform->addElement('header','general', get_string('pluginname', 'enrol_delayedcohort'));
 
-        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'));
+        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'), 'size="80"');
         $mform->setType('name', PARAM_TEXT);
 
         $options = array(ENROL_INSTANCE_ENABLED  => get_string('yes'),
@@ -103,6 +108,9 @@ class enrol_delayedcohort_edit_form extends moodleform {
         $mform->addElement('date_time_selector', 'customint3', get_string('triggerdate', 'enrol_delayedcohort'), array('optional' => true));
 
         $mform->addElement('date_time_selector', 'customint4', get_string('enddate', 'enrol_delayedcohort'), array('optional' => true));
+
+        $mform->addElement('checkbox', 'customchar1', get_string('unenrolonend', 'enrol_delayedcohort'));
+        $mform->disabledIf('customchar1', 'customint4', 'eq', '0');
 
         $mform->addElement('hidden', 'courseid', null);
         $mform->setType('courseid', PARAM_INT);

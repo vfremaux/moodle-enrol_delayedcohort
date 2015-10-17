@@ -1,5 +1,7 @@
 <?php
 
+if (!defined('MOODLE_INTERNAL')) die('You cannot use this script this way');
+
 class enrol_delayedcohort_renderer extends plugin_renderer_base {
 
     function tabs() {

@@ -27,6 +27,15 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
 
+    'enrol/delayedcohort:plan' => array(
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+        )
+    ),
+
     'enrol/delayedcohort:config' => array(
 
         'captype' => 'write',

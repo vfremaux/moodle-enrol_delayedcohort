@@ -16,6 +16,14 @@ table.bycohort tr{
     max-height:60px;
 }
 
+table.bycohort tr td {
+    font-size:0.9em;
+}
+
+table.bycohort tr td img.enrol-slot {
+    width:100px;
+}
+
 table.bycohort th {
     position:absolute;
     *position: relative; /*ie7*/
@@ -39,10 +47,18 @@ table.bycohort th {
     background-color:#FFD18C;
 }
 
+.delayedcohort-over {
+    background-color:#FF8C8C;
+}
+
 #delayedcohort-selector select{
     margin-bottom:3px;
     font-size:0.8em !important;
     height:24px;
     padding-top:3px;
     padding-bottom:3px;
+}
+
+.delayedcohort-smalltext {
+    font-size:0.8em;
 }
