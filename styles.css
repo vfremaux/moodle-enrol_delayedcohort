@@ -1,0 +1,48 @@
+
+table.bycohort {
+    table-layout: fixed; 
+    *margin-left: -100px;/*ie7*/
+}
+
+table.bycohort td, th {
+    vertical-align: top;
+    border-top: 1px solid #ccc;
+    padding:10px;
+    width:100px;
+}
+
+table.bycohort tr{
+    height:60px;
+    max-height:60px;
+}
+
+table.bycohort th {
+    position:absolute;
+    *position: relative; /*ie7*/
+    left:0; 
+    width:100px;
+}
+
+.bycohort.outer {position:relative}
+.bycohort.inner {
+    overflow-x:scroll;
+    overflow-y:visible;
+    width:80%; 
+    margin-left:180px;
+}
+
+.delayedcohort-passed {
+    background-color:#8EFD8E;
+}
+
+.delayedcohort-future {
+    background-color:#FFD18C;
+}
+
+#delayedcohort-selector select{
+    margin-bottom:3px;
+    font-size:0.8em !important;
+    height:24px;
+    padding-top:3px;
+    padding-bottom:3px;
+}
