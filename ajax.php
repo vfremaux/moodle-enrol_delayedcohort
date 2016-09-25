@@ -20,10 +20,11 @@
  * The general idea behind this file is that any errors should throw exceptions
  * which will be returned and acted upon by the calling AJAX script.
  *
- * @package enrol_delayedcohort
+ * @package   enrol_delayedcohort
+ * @category  enrol
  * @copyright 2010 Petr Skoda {@link http://skodak.org}
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define('AJAX_SCRIPT', true);
@@ -45,6 +46,8 @@ $context = context_course::instance($course->id, MUST_EXIST);
 if ($course->id == SITEID) {
     throw new moodle_exception('invalidcourse');
 }
+
+// Security. 
 
 require_login($course);
 require_capability('moodle/course:enrolreview', $context);

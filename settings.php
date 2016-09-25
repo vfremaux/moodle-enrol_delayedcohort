@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 //--- general settings -----------------------------------------------------------------------------------
-$ADMIN->add('enrolments', new admin_externalpage('enrolplanner', get_string('delayedcohortsplanner', 'enrol_delayedcohort'), "{$CFG->wwwroot}/enrol/delayedcohort/planner.php"));
+$ADMIN->add('accounts', new admin_externalpage('enrolplanner', get_string('delayedcohortsplanner', 'enrol_delayedcohort'), "{$CFG->wwwroot}/enrol/delayedcohort/planner.php"));
 
 if ($ADMIN->fulltree) {
 

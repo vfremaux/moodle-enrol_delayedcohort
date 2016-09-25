@@ -14,10 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace enrol_delayedcohort\task;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Capabilities for cohort access plugin.
+ * A scheduled task for forum cron.
+ *
+ * @todo MDL-44734 This job will be split up properly.
  *
  * @package   enrol_delayedcohort
  * @category  enrol
@@ -26,35 +30,27 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$capabilities = array(
+require_once($CFG->dirroot.'/lib/weblib.php');
 
-    'enrol/delayedcohort:plan' => array(
+class enrolsync_task extends \core\task\scheduled_task {
 
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-        )
-    ),
+    /**
+     * Get a descriptive name for this task (shown to admins).
+     *
+     * @return string
+     */
+    public function get_name() {
+        return get_string('enrolsync_task', 'enrol_delayedcohort');
+    }
 
-    'enrol/delayedcohort:config' => array(
+    /**
+     * Run trainingsessions cron.
+     */
+    public function execute() {
+        global $CFG;
 
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW,
-        )
-    ),
-
-    /* This is used only when sync suspends users instead of full unenrolment. */
-    'enrol/delayedcohort:unenrol' => array(
-
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-        )
-    ),
-
-);
+        $trace = new \text_progress_trace();
+        require_once($CFG->dirroot.'/enrol/delayedcohort/locallib.php');
+        enrol_delayedcohort_sync($trace);
+    }
+}

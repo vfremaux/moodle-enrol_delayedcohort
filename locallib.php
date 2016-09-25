@@ -14,16 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Local stuff for cohort enrolment plugin.
  *
- * @package enrol_delayedcohort
- * @copyright 2010 Petr Skoda {@link http://skodak.org}
+ * @package   enrol_delayedcohort
+ * @category  enrol
+ * @author    Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/enrol/locallib.php');
 
@@ -289,7 +290,7 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
                 'Reply-To: '.$CFG->noreplyaddress."\r\n".
                 'X-Mailer: PHP/' . phpversion();
 
-            mtrace('Sending notification to admins...');
+            $trace->output('Sending notification to admins...');
             mail($config->notifyto, $subject, $notification_html, $headers);
         }
     }
@@ -818,10 +819,14 @@ function enrol_delayedcohort_search_cohorts(course_enrolment_manager $manager, $
     return array('more' => !(bool)$limit, 'offset' => $offset, 'cohorts' => $cohorts);
 }
 
-function enrol_delayedcohort_get_planned_enrols(&$plannecourses, $lightweighted = false) {
+/**
+ * @param arrayref $plannedcourses an input array to fill with list of courses having delayedcohorts planned
+ * @param boolean $lightweight if true will require much less fields to the DB
+ */
+function enrol_delayedcohort_get_planned_enrols(&$plannedcourses, $lightweight = false) {
     global $DB;
 
-    if ($lightweighted) {
+    if ($lightweight) {
         $fields = '
             e.id,
             e.courseid

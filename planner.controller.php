@@ -17,8 +17,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Capabilities for cohort access plugin.
- *
  * @package   enrol_delayedcohort
  * @category  enrol
  * @author    Valery Fremaux <valery.fremaux@gmail.com>
@@ -26,35 +24,20 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$capabilities = array(
+if ($action == 'delete') {
+    $id = required_param('id', PARAM_INT);
+    $plugins   = enrol_get_plugins(false);
+    $instance = $DB->get_record('enrol', array('id' => $id));
+    $plugin = $plugins['delayedcohort'];
+    $plugin->delete_instance($instance);
 
-    'enrol/delayedcohort:plan' => array(
-
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-        )
-    ),
-
-    'enrol/delayedcohort:config' => array(
-
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW,
-        )
-    ),
-
-    /* This is used only when sync suspends users instead of full unenrolment. */
-    'enrol/delayedcohort:unenrol' => array(
-
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-        )
-    ),
-
-);
+    $params = array(
+        'context' => context_course::instance($instance->courseid),
+        'objectid' => $id,
+        'other' => array(
+            'courseid' => $instance->courseid,
+        ),
+    );
+    $event = \enrol_delayedcohort\event\delayedcohort_deleted::create($params);
+    $event->trigger();
+}

@@ -14,16 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Cohort enrolment plugin.
  *
- * @package enrol_delayedcohort
- * @copyright 2010 Petr Skoda {@link http://skodak.org}
+ * @package   enrol_delayedcohort
+ * @category  enrol
+ * @author    Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Cohort enrolment plugin implementation.
@@ -31,6 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_delayedcohort_plugin extends enrol_plugin {
+
     /**
      * Returns localised name of enrol instance.
      *
