@@ -25,6 +25,8 @@
  */
 namespace enrol_delayedcohort\task;
 
+require_once($CFG->dirroot.'/lib/weblib.php');
+
 class enrolsync_task extends \core\task\scheduled_task {
 
     /**
@@ -42,9 +44,8 @@ class enrolsync_task extends \core\task\scheduled_task {
     public function execute() {
         global $CFG;
 
+        $trace = new \text_progress_trace();
         require_once($CFG->dirroot.'/enrol/delayedcohort/locallib.php');
-        $trace = new null_progress_trace();
         enrol_delayedcohort_sync($trace);
-        $trace->finished();
     }
 }

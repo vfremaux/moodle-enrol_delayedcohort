@@ -27,6 +27,7 @@ $string['delayedcohort:plan'] = 'Planifier les cohortes globalement';
 $string['delayedcohort:config'] = 'Configurer les instances d\'inscription différée par cohorte';
 $string['delayedcohort:unenrol'] = 'Désincrire les utilisateurs';
 
+$string['addenrol'] = 'Configurer une inscription différée';
 $string['addgroup'] = 'Ajouter au groupe';
 $string['ajaxmore'] = 'Plus...';
 $string['all'] = 'Tous les cours';
@@ -40,12 +41,16 @@ $string['delayedcohortsplanner'] = 'Planing des cohortes différées';
 $string['enddate'] = 'Date de fin d\'inscription';
 $string['endsat'] = 'Finit le {$a}';
 $string['endsatcontinue'] = 'Finit le {$a} (sans désinscription)';
+$string['enrolsync_task'] = 'Synchronisation des cohortes différées';
 $string['event_delayedcohort_created'] = 'Instance de cohorte différée créée ';
 $string['event_delayedcohort_deleted'] = 'Instance de cohorte différée supprimée ';
-$string['event_delayedcohort_enrolled'] = 'Cohorte différée activée ';
 $string['event_delayedcohort_ended'] = 'Cohort différée désactivée ';
+$string['event_delayedcohort_enrolled'] = 'Cohorte différée activée ';
 $string['instanceexists'] = 'La cohorte est déjà synchronisée sur ce rôle';
+$string['manageenrols'] = 'Gérer toutes les inscriptions';
 $string['noprogrammablecohorts'] = 'Pas de cohortes programmables';
+$string['notenabled'] = 'La méthode d\'inscription Cohortes Différées n\'est pas activée dans l\'administration centrale de Moodle.';
+$string['notifyto'] = 'Notifier à';
 $string['plannedcourses'] = 'Planning des cours';
 $string['planner'] = 'Planning d\'activation des cohortes';
 $string['pluginname'] = 'Synchronisation différée des cohortes';
@@ -53,10 +58,8 @@ $string['pluginname_desc'] = 'Ce plugin synchronise les inscriptions au cours su
 $string['status'] = 'Actif';
 $string['triggerdate'] = 'Date d\'exécution';
 $string['unassigned'] = 'Non programmés';
-$string['unplannedcourses'] = 'Cours non assignés';
 $string['unenrolonend'] = 'Désinscrire à la date de fin';
-$string['notifyto'] = 'Notifier à';
-$string['notenabled'] = 'La méthode d\'inscription Cohortes Différées n\'est pas activée dans l\'administration centrale de Moodle.';
+$string['unplannedcourses'] = 'Cours non assignés';
 
 $string['notifyto_help'] = 'Si non vide, enverra une notification aux adresses mail mentionnées (liste à virgules) lorsqu\'une activation de cohorte se déclenche';
 

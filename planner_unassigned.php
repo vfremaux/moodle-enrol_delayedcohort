@@ -45,22 +45,39 @@ if (empty($plannedcourses)) {
 
 $coursestr = get_string('course');
 
-if (!$courses = $DB->get_records_select('course', $sql, $params, 'id,shortname,idnumber,fullname,visible')) {
+$courses = $DB->get_records_select('course', "id $sql", $params, 'shortname', 'id,shortname,idnumber,fullname,visible');
+
+if (empty($courses)) {
     echo $OUTPUT->notification(get_string('nocourses', 'enrol_delayedcohort'));
 } else {
     $table = new html_table();
-    $table->head = array($coursestr, '');
-    $table->size = array('20%', '20%', '20%', '20%', '20%');
+    $table->head = array($coursestr, '', '');
+    $table->size = array('30%', '30%', '30%');
     $table->width = '100%';
 
     foreach ($courses as $c) {
+        if ($c->id == SITEID) {
+            continue;
+        }
+        $coursecontext = context_course::instance($c->id);
+        if (!has_capability('enrol/delayedcohort:config', $coursecontext)) {
+            continue;
+        }
         $row = array();
-        $row[] = "$c->shortname - $c->fullname";
-        $instancesurl = new moodle_url('/enrol/instances.php', array('courseid' => $c->id));
+        if ($c->visible) {
+            $row[] = "$c->shortname - $c->fullname";
+        } else {
+            $row[] = '<span class="shadow">'.$c->shortname.' - '.$c->fullname.'</span>';
+        }
+        $instancesurl = new moodle_url('/enrol/delayedcohort/edit.php', array('courseid' => $c->id));
         $cmd = '<a href="'.$instancesurl.'">'.get_string('addenrol', 'enrol_delayedcohort').'</a>';
-        $row = $cmd;
+        $row[] = $cmd;
+        $instancesurl = new moodle_url('/enrol/instances.php', array('id' => $c->id));
+        $cmd = '<a href="'.$instancesurl.'">'.get_string('manageenrols', 'enrol_delayedcohort').'</a>';
+        $row[] = $cmd;
+        $table->data[] = $row;
     }
-    
+
     echo html_writer::table($table);
 }
 
