@@ -31,6 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_delayedcohort_plugin extends enrol_plugin {
+
     /**
      * Returns localised name of enrol instance.
      *

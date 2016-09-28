@@ -289,7 +289,7 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
                 'Reply-To: '.$CFG->noreplyaddress."\r\n".
                 'X-Mailer: PHP/' . phpversion();
 
-            mtrace('Sending notification to admins...');
+            $trace->output('Sending notification to admins...');
             mail($config->notifyto, $subject, $notification_html, $headers);
         }
     }
@@ -818,10 +818,14 @@ function enrol_delayedcohort_search_cohorts(course_enrolment_manager $manager, $
     return array('more' => !(bool)$limit, 'offset' => $offset, 'cohorts' => $cohorts);
 }
 
-function enrol_delayedcohort_get_planned_enrols(&$plannecourses, $lightweighted = false) {
+/**
+ * @param arrayref $plannedcourses an input array to fill with list of courses having delayedcohorts planned
+ * @param boolean $lightweight if true will require much less fields to the DB
+ */
+function enrol_delayedcohort_get_planned_enrols(&$plannedcourses, $lightweight = false) {
     global $DB;
 
-    if ($lightweighted) {
+    if ($lightweight) {
         $fields = '
             e.id,
             e.courseid
