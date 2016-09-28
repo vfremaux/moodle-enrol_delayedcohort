@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,18 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Adds new instance of enrol_cohort to specified course.
  *
- * @package enrol_delayedcohort
- * @copyright 2010 Petr Skoda {@link http://skodak.org}
+ * @package   enrol_delayedcohort
+ * @category  enrol
+ * @author    Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-if (!defined('MOODLE_INTERNAL')) {
-    die('You canot use this script this way');
-}
 
 echo $OUTPUT->header();
 

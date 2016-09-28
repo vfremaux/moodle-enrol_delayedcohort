@@ -14,16 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace enrol_delayedcohort\task;
+
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * A scheduled task for forum cron.
  *
  * @todo MDL-44734 This job will be split up properly.
  *
- * @package    enrol_delayedcohort
- * @copyright  2015 Valery Fremaux (valery@edunao.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   enrol_delayedcohort
+ * @category  enrol
+ * @author    Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace enrol_delayedcohort\task;
 
 require_once($CFG->dirroot.'/lib/weblib.php');
 

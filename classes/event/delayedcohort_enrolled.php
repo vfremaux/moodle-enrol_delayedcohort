@@ -15,14 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains an event for when a feedback activity is viewed.
+ * This file contains an event for when a delayed cohort enrol is starting applying.
  *
- * @package    enrol_delayedcohort
- * @copyright  2015 Valery Fremaux
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   enrol_delayedcohort
+ * @category  enrol
+ * @author    Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace enrol_delayedcohort\event;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -34,11 +37,6 @@ defined('MOODLE_INTERNAL') || die();
  *      @type int anonymous if certificate is anonymous.
  *      @type int cmid course module id.
  * }
- *
- * @package    enrol_delayedcohort
- * @since      Moodle 2.7
- * @copyright  2015 Valery Fremaux
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class delayedcohort_enrolled extends \core\event\base {
 

@@ -17,10 +17,11 @@
 /**
  * Adds new instance of enrol_cohort to specified course.
  *
- * @package enrol_delayedcohort
- * @copyright 2010 Petr Skoda {@link http://skodak.org}
+ * @package   enrol_delayedcohort
+ * @category  enrol
+ * @author    Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require('../../config.php');
@@ -32,6 +33,8 @@ $context = context_system::instance();
 $PAGE->set_context($context);
 $view = optional_param('view', 'bycourse', PARAM_TEXT);
 $action = optional_param('what', '', PARAM_TEXT);
+
+// Security.
 
 require_login();
 require_capability('enrol/delayedcohort:plan', $context);

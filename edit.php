@@ -17,10 +17,11 @@
 /**
  * Adds new instance of enrol_delayedcohort to specified course.
  *
- * @package enrol_delayedcohort
- * @copyright 2010 Petr Skoda {@link http://skodak.org}
+ * @package   enrol_delayedcohort
+ * @category  enrol
+ * @author    Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require('../../config.php');
@@ -36,6 +37,8 @@ $return = optional_param('return', '', PARAM_TEXT);
 
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
+
+// Security.
 
 require_login($course);
 require_capability('moodle/course:enrolconfig', $context);
