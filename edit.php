@@ -68,7 +68,8 @@ if (!enrol_is_enabled('delayedcohort')) {
 $enrol = enrol_get_plugin('delayedcohort');
 
 if ($instanceid) {
-    $instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'delayedcohort', 'id' => $instanceid), '*', MUST_EXIST);
+    $params = array('courseid' => $course->id, 'enrol' => 'delayedcohort', 'id' => $instanceid);
+    $instance = $DB->get_record('enrol', $params, '*', MUST_EXIST);
 
 } else {
     // No instance yet, we have to add new instance.
@@ -108,13 +109,21 @@ if ($mform->is_cancelled()) {
         $instance->status       = $data->status;
         $instance->roleid       = $data->roleid;
         $instance->customint2   = $data->customint2;
-        $instance->customint3   = $data->customint3; // trigger date
-        $instance->customint4   = $data->customint4; // end date
-        $instance->customchar1   = (!empty($data->customchar1)) ? 1 : 0; // do unenrol on passed end
+        $instance->customint3   = $data->customint3; // Trigger date.
+        $instance->customint4   = $data->customint4; // End date.
+        $instance->customchar1   = (!empty($data->customchar1)) ? 1 : 0; // Do unenrol on passed end.
         $instance->timemodified = time();
         $DB->update_record('enrol', $instance);
     }  else {
-        $enrolid = $enrol->add_instance($course, array('name' => $data->name, 'status' => $data->status, 'customint1' => $data->customint1, 'roleid' => $data->roleid, 'customint2' => $data->customint2, 'customint3' => $data->customint3, 'customint4' => $data->customint4, 'customchar1' => !empty($data->customchar1) ? 1 : 0));
+        $attrs = array('name' => $data->name,
+                       'status' => $data->status,
+                       'customint1' => $data->customint1,
+                       'roleid' => $data->roleid,
+                       'customint2' => $data->customint2,
+                       'customint3' => $data->customint3,
+                       'customint4' => $data->customint4,
+                       'customchar1' => !empty($data->customchar1) ? 1 : 0);
+        $enrolid = $enrol->add_instance($course, $attrs);
 
         $params = array(
             'context' => context_course::instance($course->id),
