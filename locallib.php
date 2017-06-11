@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Local stuff for cohort enrolment plugin.
  *
@@ -23,9 +25,8 @@
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/enrol/locallib.php');
+require_once($CFG->dirroot . '/enrol/locallib.php');
 
 /**
  * Event handler for cohort enrolment plugin.

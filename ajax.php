@@ -72,8 +72,7 @@ switch ($action) {
         $otheruserroles = optional_param('otherusers', false, PARAM_BOOL);
         $outcome->response = array_reverse($manager->get_assignable_roles($otheruserroles), true);
         break;
-    case 'getdefaultcohortrole':
-        // TODO: use in ajax UI MDL-24280.
+    case 'getdefaultcohortrole': //TODO: use in ajax UI MDL-24280
         $cohortenrol = enrol_get_plugin('delayedcohort');
         $outcome->response = $cohortenrol->get_config('roleid');
         break;
@@ -102,7 +101,7 @@ switch ($action) {
         $trace->finished();
         break;
     case 'enrolcohortusers':
-        // TODO: this should be moved to enrol_manual, see MDL-35618.
+        //TODO: this should be moved to enrol_manual, see MDL-35618.
         require_capability('enrol/manual:enrol', $context);
         $roleid = required_param('roleid', PARAM_INT);
         $cohortid = required_param('cohortid', PARAM_INT);

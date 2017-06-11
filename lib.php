@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Cohort enrolment plugin.
  *
@@ -23,8 +25,6 @@
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Cohort enrolment plugin implementation.
@@ -97,7 +97,7 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
             SELECT
                 id,
                 contextid
-            FROM
+            FROM 
                 {cohort}
             WHERE
                 contextid $sqlparents
@@ -139,6 +139,18 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
     }
 
     /**
+     * Called after updating/inserting course.
+     *
+     * @param bool $inserted true if course just inserted
+     * @param stdClass $course
+     * @param stdClass $data form data
+     * @return void
+     */
+    public function course_updated($inserted, $course, $data) {
+        // It turns out there is no need for cohorts to deal with this hook, see MDL-34870.
+    }
+
+    /**
      * Update instance status
      *
      * @param stdClass $instance
@@ -163,8 +175,7 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
      * @param stdClass $instance course enrol instance
      * @param stdClass $ue record from user_enrolments table
      *
-     * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol this user, false means
-     * nobody may touch this user enrolment
+     * @return bool - true means user with 'enrol/xxx:unenrol' may unenrol this user, false means nobody may touch this user enrolment
      */
     public function allow_unenrol_user(stdClass $instance, stdClass $ue) {
         if ($ue->status == ENROL_USER_SUSPENDED) {
@@ -189,8 +200,7 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
         $params['ue'] = $ue->id;
         if ($this->allow_unenrol_user($instance, $ue) && has_capability('enrol/delayedcohort:unenrol', $context)) {
             $url = new moodle_url('/enrol/unenroluser.php', $params);
-            $attrs = array('class' => 'unenrollink', 'rel' => $ue->id);
-            $actions[] = new user_enrolment_action(new pix_icon('t/delete', ''), get_string('unenrol', 'enrol'), $url, $attrs);
+            $actions[] = new user_enrolment_action(new pix_icon('t/delete', ''), get_string('unenrol', 'enrol'), $url, array('class'=>'unenrollink', 'rel'=>$ue->id));
         }
         return $actions;
     }
@@ -234,9 +244,9 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
         $modules = array('moodle-enrol_delayedcohort-quickenrolment', 'moodle-enrol_delayedcohort-quickenrolment-skin');
         $function = 'M.enrol_delayedcohort.quickenrolment.init';
         $arguments = array(
-            'courseid' => $course->id,
-            'ajaxurl' => '/enrol/delayedcohort/ajax.php',
-            'url' => $manager->get_moodlepage()->url->out(false),
+            'courseid'        => $course->id,
+            'ajaxurl'         => '/enrol/delayedcohort/ajax.php',
+            'url'             => $manager->get_moodlepage()->url->out(false),
             'manualEnrolment' => $hasmanualinstance);
         $button->require_yui_module($modules, $function, array($arguments));
 
@@ -265,11 +275,7 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
         }
 
         if ($data->roleid and $DB->record_exists('cohort', array('id'=>$data->customint1))) {
-            $params = array('roleid' => $data->roleid,
-                            'customint1' => $data->customint1,
-                            'courseid' => $course->id,
-                            'enrol' => $this->get_name());
-            $instance = $DB->get_record('enrol', $params);
+            $instance = $DB->get_record('enrol', array('roleid'=>$data->roleid, 'customint1'=>$data->customint1, 'courseid'=>$course->id, 'enrol'=>$this->get_name()));
             if ($instance) {
                 $instanceid = $instance->id;
             } else {
@@ -277,18 +283,14 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
             }
             $step->set_mapping('enrol', $oldid, $instanceid);
 
-            require_once($CFG->dirroot.'/enrol/delayedcohort/locallib.php');
+            require_once("$CFG->dirroot/enrol/delayedcohort/locallib.php");
             $trace = new null_progress_trace();
             enrol_delayedcohort_sync($trace, $course->id);
             $trace->finished();
 
         } else if ($this->get_config('unenrolaction') == ENROL_EXT_REMOVED_SUSPENDNOROLES) {
             $data->customint1 = 0;
-            $params = array('roleid' => $data->roleid,
-                            'customint1' => $data->customint1,
-                            'courseid' => $course->id,
-                            'enrol' => $this->get_name());
-            $instance = $DB->get_record('enrol', $params);
+            $instance = $DB->get_record('enrol', array('roleid'=>$data->roleid, 'customint1'=>$data->customint1, 'courseid'=>$course->id, 'enrol'=>$this->get_name()));
 
             if ($instance) {
                 $instanceid = $instance->id;
@@ -298,7 +300,7 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
             }
             $step->set_mapping('enrol', $oldid, $instanceid);
 
-            require_once($CFG->dirroot.'/enrol/delayedcohort/locallib.php');
+            require_once("$CFG->dirroot/enrol/delayedcohort/locallib.php");
             $trace = new null_progress_trace();
             enrol_delayedcohort_sync($trace, $course->id);
             $trace->finished();
@@ -317,8 +319,7 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
      * @param int $oldinstancestatus
      * @param int $userid
      */
-    public function restore_user_enrolment(restore_enrolments_structure_step $step, $data, $instance, $userid,
-            $oldinstancestatus) {
+    public function restore_user_enrolment(restore_enrolments_structure_step $step, $data, $instance, $userid, $oldinstancestatus) {
         global $DB;
 
         if ($this->get_config('unenrolaction') != ENROL_EXT_REMOVED_SUSPENDNOROLES) {
@@ -326,14 +327,23 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
             return;
         }
 
-        /*
-         * ENROL_EXT_REMOVED_SUSPENDNOROLES means all previous enrolments are restored
-         * but without roles and suspended.
-         */
+        // ENROL_EXT_REMOVED_SUSPENDNOROLES means all previous enrolments are restored
+        // but without roles and suspended.
 
-        if (!$DB->record_exists('user_enrolments', array('enrolid' => $instance->id, 'userid' => $userid))) {
+        if (!$DB->record_exists('user_enrolments', array('enrolid'=>$instance->id, 'userid'=>$userid))) {
             $this->enrol_user($instance, $userid, null, $data->timestart, $data->timeend, ENROL_USER_SUSPENDED);
         }
+    }
+
+    /**
+     * Restore user group membership.
+     * @param stdClass $instance
+     * @param int $groupid
+     * @param int $userid
+     */
+    public function restore_group_member($instance, $groupid, $userid) {
+        // Nothing to do here, the group members are added in $this->restore_group_restored()
+        return;
     }
 }
 
