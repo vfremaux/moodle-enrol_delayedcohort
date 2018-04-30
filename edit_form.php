@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Adds instance form
  *
@@ -25,13 +23,14 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-require_once("$CFG->libdir/formslib.php");
+require_once($CFG->libdir.'/formslib.php');
 
 class enrol_delayedcohort_edit_form extends moodleform {
 
-    function definition() {
-        global $CFG, $DB;
+    public function definition() {
+        global $DB;
 
         $mform  = $this->_form;
 
@@ -62,9 +61,10 @@ class enrol_delayedcohort_edit_form extends moodleform {
 
         if ($instance->id) {
             if ($cohort = $DB->get_record('cohort', array('id' => $instance->customint1))) {
-                $cohorts = array($instance->customint1=>format_string($cohort->name, true, array('context' => context::instance_by_id($cohort->contextid))));
+                $options = array('context' => context::instance_by_id($cohort->contextid));
+                $cohorts = array($instance->customint1 => format_string($cohort->name, true, $options));
             } else {
-                $cohorts = array($instance->customint1=>get_string('error'));
+                $cohorts = array($instance->customint1 => get_string('error'));
             }
             $mform->addElement('select', 'customint1', get_string('cohort', 'cohort'), $cohorts);
             $mform->setConstant('customint1', $instance->customint1);
@@ -106,9 +106,11 @@ class enrol_delayedcohort_edit_form extends moodleform {
         }
         $mform->addElement('select', 'customint2', get_string('addgroup', 'enrol_delayedcohort'), $groups);
 
-        $mform->addElement('date_time_selector', 'customint3', get_string('triggerdate', 'enrol_delayedcohort'), array('optional' => true));
+        $label = get_string('triggerdate', 'enrol_delayedcohort');
+        $mform->addElement('date_time_selector', 'customint3', $label, array('optional' => true));
 
-        $mform->addElement('date_time_selector', 'customint4', get_string('enddate', 'enrol_delayedcohort'), array('optional' => true));
+        $label = get_string('enddate', 'enrol_delayedcohort');
+        $mform->addElement('date_time_selector', 'customint4', $label, array('optional' => true));
 
         $mform->addElement('checkbox', 'customchar1', get_string('unenrolonend', 'enrol_delayedcohort'));
         $mform->disabledIf('customchar1', 'customint4', 'eq', '0');
@@ -128,13 +130,23 @@ class enrol_delayedcohort_edit_form extends moodleform {
         $this->set_data($instance);
     }
 
-    function validation($data, $files) {
+    public function validation($data, $files) {
         global $DB;
 
         $errors = parent::validation($data, $files);
 
-        $params = array('roleid' => $data['roleid'], 'customint1' => $data['customint1'], 'courseid' => $data['courseid'], 'id' => $data['id']);
-        if ($DB->record_exists_select('enrol', "roleid = :roleid AND customint1 = :customint1 AND courseid = :courseid AND enrol = 'delayedcohort' AND id <> :id", $params)) {
+        $params = array('roleid' => $data['roleid'],
+                        'customint1' => $data['customint1'],
+                        'courseid' => $data['courseid'],
+                        'id' => $data['id']);
+        $select = "
+            roleid = :roleid AND
+            customint1 = :customint1 AND
+            courseid = :courseid AND
+            enrol = 'delayedcohort' AND
+            id <> :id
+        ";
+        if ($DB->record_exists_select('enrol', $select, $params)) {
             $errors['roleid'] = get_string('instanceexists', 'enrol_delayedcohort');
         }
 
