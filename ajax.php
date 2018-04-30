@@ -68,16 +68,20 @@ $outcome->response = new stdClass();
 $outcome->error = '';
 
 switch ($action) {
-    case 'getassignable':
+    case 'getassignable': {
         $otheruserroles = optional_param('otherusers', false, PARAM_BOOL);
         $outcome->response = array_reverse($manager->get_assignable_roles($otheruserroles), true);
         break;
-    case 'getdefaultcohortrole':
+    }
+
+    case 'getdefaultcohortrole': {
         // TODO: use in ajax UI MDL-24280.
         $cohortenrol = enrol_get_plugin('delayedcohort');
         $outcome->response = $cohortenrol->get_config('roleid');
         break;
-    case 'getcohorts':
+    }
+
+    case 'getcohorts': {
         require_capability('moodle/course:enrolconfig', $context);
         $offset = optional_param('offset', 0, PARAM_INT);
         $search  = optional_param('search', '', PARAM_RAW);
@@ -85,7 +89,9 @@ switch ($action) {
         // Some browsers reorder collections by key.
         $outcome->response['cohorts'] = array_values($outcome->response['cohorts']);
         break;
-    case 'enrolcohort':
+    }
+
+    case 'enrolcohort': {
         require_capability('moodle/course:enrolconfig', $context);
         require_capability('enrol/cohort:config', $context);
         $roleid = required_param('roleid', PARAM_INT);
@@ -101,7 +107,9 @@ switch ($action) {
         enrol_delayedcohort_sync($trace, $manager->get_course()->id);
         $trace->finished();
         break;
-    case 'enrolcohortusers':
+    }
+
+    case 'enrolcohortusers': {
         // TODO: this should be moved to enrol_manual, see MDL-35618.
         require_capability('enrol/manual:enrol', $context);
         $roleid = required_param('roleid', PARAM_INT);
@@ -123,6 +131,8 @@ switch ($action) {
         $outcome->response->message = get_string('enrollednewusers', 'enrol', $result);
         $outcome->response->yesLabel = get_string('ok');
         break;
+    }
+
     default:
         throw new enrol_ajax_exception('unknowajaxaction');
 }

@@ -139,6 +139,19 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
     }
 
     /**
+     * Called after updating/inserting course.
+     *
+     * @param bool $inserted true if course just inserted
+     * @param stdClass $course
+     * @param stdClass $data form data
+     * @return void
+     */
+    public function course_updated($inserted, $course, $data) {
+        assert(1);
+        // It turns out there is no need for cohorts to deal with this hook, see MDL-34870.
+    }
+
+    /**
      * Update instance status
      *
      * @param stdClass $instance
@@ -334,6 +347,17 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
         if (!$DB->record_exists('user_enrolments', array('enrolid' => $instance->id, 'userid' => $userid))) {
             $this->enrol_user($instance, $userid, null, $data->timestart, $data->timeend, ENROL_USER_SUSPENDED);
         }
+    }
+
+    /**
+     * Restore user group membership.
+     * @param stdClass $instance
+     * @param int $groupid
+     * @param int $userid
+     */
+    public function restore_group_member($instance, $groupid, $userid) {
+        // Nothing to do here, the group members are added in $this->restore_group_restored()
+        return;
     }
 }
 
