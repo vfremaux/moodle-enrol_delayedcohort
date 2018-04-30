@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Local stuff for cohort enrolment plugin.
  *
@@ -25,8 +23,9 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/enrol/locallib.php');
+require_once($CFG->dirroot.'/enrol/locallib.php');
 
 /**
  * Event handler for cohort enrolment plugin.
@@ -111,7 +110,12 @@ class enrol_delayedcohort_handler {
         $now = time();
 
         // Does anything want to sync with this cohort?
-        if (!$instances = $DB->get_records('enrol', " customint1 = ? AND enrol = ? AND customint3 < ? ", array($event->objectid, 'delayedcohort', $now), 'id ASC')) {
+        $select = "
+            customint1 = ? AND
+            enrol = ? AND
+            customint3 < ?
+        ";
+        if (!$instances = $DB->get_records_select('enrol', $select, array($event->objectid, 'delayedcohort', $now), 'id ASC')) {
             return true;
         }
 
@@ -119,7 +123,8 @@ class enrol_delayedcohort_handler {
         $unenrolaction = $plugin->get_config('unenrolaction', ENROL_EXT_REMOVED_UNENROL);
 
         foreach ($instances as $instance) {
-            if (!$ue = $DB->get_record('user_enrolments', array('enrolid' => $instance->id, 'userid' => $event->relateduserid))) {
+            $params = array('enrolid' => $instance->id, 'userid' => $event->relateduserid);
+            if (!$ue = $DB->get_record('user_enrolments', $params)) {
                 continue;
             }
             if ($unenrolaction == ENROL_EXT_REMOVED_UNENROL) {
@@ -129,7 +134,11 @@ class enrol_delayedcohort_handler {
                 if ($ue->status != ENROL_USER_SUSPENDED) {
                     $plugin->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
                     $context = context_course::instance($instance->courseid);
-                    role_unassign_all(array('userid' => $ue->userid, 'contextid' => $context->id, 'component' => 'enrol_delayedcohort', 'itemid' => $instance->id));
+                    $params = array('userid' => $ue->userid,
+                                    'contextid' => $context->id,
+                                    'component' => 'enrol_delayedcohort',
+                                    'itemid' => $instance->id);
+                    role_unassign_all($params);
                 }
             }
         }
@@ -148,7 +157,12 @@ class enrol_delayedcohort_handler {
         $now = time();
 
         // Does anything want to sync with this cohort?
-        if (!$instances = $DB->get_records_select('enrol', " customint1 = ? AND enrol = ? AND customint3 < ?", array($event->objectid, 'delayedcohort', $now), 'id ASC')) {
+        $select = "
+            customint1 = ? AND
+            enrol = ? AND
+            customint3 < ?
+        ";
+        if (!$instances = $DB->get_records_select('enrol', $select, array($event->objectid, 'delayedcohort', $now), 'id ASC')) {
             return true;
         }
 
@@ -158,7 +172,10 @@ class enrol_delayedcohort_handler {
         foreach ($instances as $instance) {
             if ($unenrolaction == ENROL_EXT_REMOVED_SUSPENDNOROLES) {
                 $context = context_course::instance($instance->courseid);
-                role_unassign_all(array('contextid' => $context->id, 'component' => 'enrol_delayedcohort', 'itemid' => $instance->id));
+                $params = array('contextid' => $context->id,
+                                'component' => 'enrol_delayedcohort',
+                                'itemid' => $instance->id);
+                role_unassign_all($params);
                 $plugin->update_status($instance, ENROL_INSTANCE_DISABLED);
             } else {
                 $plugin->delete_instance($instance);
@@ -175,7 +192,7 @@ class enrol_delayedcohort_handler {
  * @param int $courseid one course, empty mean all
  * @return int 0 means ok, 1 means error, 2 means plugin disabled
  */
-function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
+function enrol_delayedcohort_sync(progress_trace $trace, $courseid = null) {
     global $CFG, $DB, $SITE;
 
     $config = get_config('enrol_delayedcohort');
@@ -196,7 +213,7 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
     $trace->output('Starting user enrolment synchronisation...');
 
     $allroles = get_all_roles();
-    $instances = array(); //cache
+    $instances = array(); // Cache.
 
     $plugin = enrol_get_plugin('delayedcohort');
     $unenrolaction = $plugin->get_config('unenrolaction', ENROL_EXT_REMOVED_UNENROL);
@@ -215,20 +232,20 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
         FROM
             {cohort_members} cm
         JOIN
-            {enrol} e 
+            {enrol} e
         ON
-            (e.customint1 = cm.cohortid AND 
+            (e.customint1 = cm.cohortid AND
             e.enrol = \'delayedcohort\' '.$onecourse.')
         JOIN
-            {user} u 
+            {user} u
         ON
             (u.id = cm.userid AND u.deleted = 0)
-        LEFT JOIN 
-            {user_enrolments} ue 
-        ON 
-            (ue.enrolid = e.id AND 
+        LEFT JOIN
+            {user_enrolments} ue
+        ON
+            (ue.enrolid = e.id AND
             ue.userid = cm.userid)
-        WHERE 
+        WHERE
             (ue.id IS NULL OR
             ue.status = :suspended) AND
             e.customint3 <= '.$now.' AND
@@ -256,11 +273,11 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
     }
     $rs->close();
 
-    // Notify if necessary for any enrollements
+    // Notify if necessary for any enrolments.
     if (!empty($config->notifyto) && !empty($enrolled)) {
 
         foreach ($enrolled as $enrolid => $ues) {
-            // for each enrol instance
+            // For each enrol instance.
 
             // make user list.
             $unames = array();
@@ -270,7 +287,7 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
                 $umails[] = $user->email;
             }
 
-            // Send notification
+            // Send notification.
             $instance = $instances[$enrolid];
 
             $e = new StdClass;
@@ -295,7 +312,7 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
         }
     }
 
-    // Run across instances and record event for activated instances
+    // Run across instances and record event for activated instances.
     foreach ($instances as $instance) {
         if ($instance->customint7 == 0) {
             // Fire events to reflect the split..
@@ -325,7 +342,7 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
             (e.id = ue.enrolid AND
             e.enrol = 'delayedcohort' $onecourse) AND
             e.customint3 <= $now
-        LEFT JOIN 
+        LEFT JOIN
             {cohort_members} cm
         ON
             (cm.cohortid = e.customint1 AND
@@ -344,12 +361,17 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
             $plugin->unenrol_user($instance, $ue->userid);
             $trace->output("unenrolling: $ue->userid ==> $instance->courseid via delayed cohort $instance->customint1", 1);
 
-        } else { // ENROL_EXT_REMOVED_SUSPENDNOROLES
+        } else {
+            // ENROL_EXT_REMOVED_SUSPENDNOROLES.
             // Just disable and ignore any changes.
             if ($ue->status != ENROL_USER_SUSPENDED) {
                 $plugin->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
                 $context = context_course::instance($instance->courseid);
-                role_unassign_all(array('userid' => $ue->userid, 'contextid' => $context->id, 'component' => 'enrol_delayedcohort', 'itemid' => $instance->id));
+                $params = array('userid' => $ue->userid,
+                                'contextid' => $context->id,
+                                'component' => 'enrol_delayedcohort',
+                                'itemid' => $instance->id);
+                role_unassign_all($params);
                 $trace->output("suspending and unsassigning all roles: $ue->userid ==> $instance->courseid", 1);
             }
         }
@@ -372,7 +394,7 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
             e.enrol = 'delayedcohort' $onecourse) AND
             (e.customint3 > $now OR 
             (e.customint4 < $now AND e.customchar1 = 1) )
-        LEFT JOIN 
+        LEFT JOIN
             {cohort_members} cm
         ON
             (cm.cohortid = e.customint1 AND
@@ -389,12 +411,17 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
             $plugin->unenrol_user($instance, $ue->userid);
             $trace->output("unenrolling: $ue->userid ==> $instance->courseid via delayed cohort $instance->customint1", 1);
 
-        } else { // ENROL_EXT_REMOVED_SUSPENDNOROLES
+        } else {
+            // ENROL_EXT_REMOVED_SUSPENDNOROLES.
             // Just disable and ignore any changes.
             if ($ue->status != ENROL_USER_SUSPENDED) {
                 $plugin->update_user_enrol($instance, $ue->userid, ENROL_USER_SUSPENDED);
                 $context = context_course::instance($instance->courseid);
-                role_unassign_all(array('userid' => $ue->userid, 'contextid' => $context->id, 'component' => 'enrol_delayedcohort', 'itemid' => $instance->id));
+                $params = array('userid' => $ue->userid,
+                                'contextid' => $context->id,
+                                'component' => 'enrol_delayedcohort',
+                                'itemid' => $instance->id);
+                role_unassign_all($params);
                 $trace->output("suspending and unsassigning all roles: $ue->userid ==> $instance->courseid", 1);
             }
         }
@@ -403,8 +430,8 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = NULL) {
     unset($instances);
 
     // Now assign all necessary roles to enrolled users - skip suspended instances and users.
-    // Skip out of timerange enrolments
-    $onecourse = $courseid ? "AND e.courseid = :courseid" : "";
+    // Skip out of timerange enrolments.
+    $onecourse = $courseid ? "AND e.courseid = :courseid" : '';
     $now = time();
 
     $sql = "
