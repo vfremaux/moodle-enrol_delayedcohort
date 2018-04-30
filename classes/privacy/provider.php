@@ -14,22 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Delayed Cohort enrolment plugin version specification.
- *
- * @package    enrol_delayedcohort
- * @category   enrol
- * @copyright  2015 Valery Fremaux (valery@edunao.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace enrol_delayedcohort\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015101703;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2017110800;        // Requires this Moodle version.
-$plugin->component = 'enrol_delayedcohort';    // Full name of the plugin (used for diagnostics).
-$plugin->release = '3.4.0 (Build 2015101703)';
-$plugin->maturity = MATURITY_RC;
-
-// Non Moodle attributes.
-$plugin->codeincrement = '3.4.0000';
+class provider implements \core_privacy\local\metadata\null_provider {
+}
