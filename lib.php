@@ -224,7 +224,7 @@ class enrol_delayedcohort_plugin extends enrol_plugin {
         }
 
         $cohorturl = new moodle_url('/enrol/delayedcohort/edit.php', array('courseid' => $course->id));
-        $button = new enrol_user_button($cohorturl, get_string('enrolcohort', 'enrol'), 'get');
+        $button = new enrol_user_button($cohorturl, get_string('enrolcohort', 'enrol_delayedcohort'), 'get');
         $button->class .= ' enrol_delayedcohort_plugin';
 
         $button->strings_for_js(array(

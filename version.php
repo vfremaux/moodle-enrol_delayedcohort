@@ -17,18 +17,20 @@
 /**
  * Delayed Cohort enrolment plugin version specification.
  *
- * @package    enrol_delayedcohort
- * @category   enrol
- * @copyright  2015 Valery Fremaux (valery@edunao.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     enrol_delayedcohort
+ * @category    enrol
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright   2010 Petr Skoda {@link http://skodak.org}
+ * @copyright   2015 Valery Fremaux (http://www.mylearningfactory.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015101703;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2018061901;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2018042700;        // Requires this Moodle version.
 $plugin->component = 'enrol_delayedcohort';    // Full name of the plugin (used for diagnostics).
-$plugin->release = '3.5.0 (Build 2015101703)';
+$plugin->release = '3.5.0 (Build 2018061901)';
 $plugin->maturity = MATURITY_RC;
 
 // Non Moodle attributes.

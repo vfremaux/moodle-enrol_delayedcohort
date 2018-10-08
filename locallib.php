@@ -273,7 +273,7 @@ function enrol_delayedcohort_sync(progress_trace $trace, $courseid = null) {
     }
     $rs->close();
 
-    // Notify if necessary for any enrollements.
+    // Notify if necessary for any enrolments.
     if (!empty($config->notifyto) && !empty($enrolled)) {
 
         foreach ($enrolled as $enrolid => $ues) {

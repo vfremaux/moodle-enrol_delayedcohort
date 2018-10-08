@@ -40,6 +40,7 @@ $string['delayed'] = 'différé';
 $string['delayedcohortsplanner'] = 'Planing des cohortes différées';
 $string['enddate'] = 'Date de fin d\'inscription';
 $string['endsat'] = 'Finit le {$a}';
+$string['enrolcohort'] = 'Inscrire une cohorte différée';
 $string['endsatcontinue'] = 'Finit le {$a} (sans désinscription)';
 $string['enrolsync_task'] = 'Synchronisation des cohortes différées';
 $string['event_delayedcohort_created'] = 'Instance de cohorte différée créée ';

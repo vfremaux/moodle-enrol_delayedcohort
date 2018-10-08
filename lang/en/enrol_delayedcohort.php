@@ -26,6 +26,9 @@ $string['delayedcohort:plan'] = 'Schedule cohorts on global planner';
 $string['delayedcohort:config'] = 'Configure cohort instances';
 $string['delayedcohort:unenrol'] = 'Unenrol suspended users';
 
+// Privacy
+$string['privacy:metadata'] = 'The Delayed Cohorts Enrolment does not store any personal data about any user.';
+
 $string['addenrol'] = 'Add new enrolment';
 $string['addgroup'] = 'Add to group';
 $string['ajaxmore'] = 'More...';
@@ -40,6 +43,7 @@ $string['delayedcohortsplanner'] = 'Delayed Cohorts Planner';
 $string['enddate'] = 'End date';
 $string['endsat'] = 'Ends at {$a}';
 $string['endsatcontinue'] = 'Ends at {$a} without unenrol';
+$string['enrolcohort'] = 'Enrol a delayed cohort';
 $string['enrolsync_task'] = 'Delayed cohorts enrol synchronisation';
 $string['event_delayedcohort_created'] = 'Delayed cohort instance created ';
 $string['event_delayedcohort_deleted'] = 'Delayed cohort instance deleted ';
