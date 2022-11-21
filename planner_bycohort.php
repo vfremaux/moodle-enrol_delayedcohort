@@ -25,8 +25,6 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once($CFG->dirroot.'/lib/coursecatlib.php');
-
 $pagesize = 5;
 $cpage = optional_param('cpage', 0, PARAM_INT);
 $allcohorts = $DB->count_records('cohort');

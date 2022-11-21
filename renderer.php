@@ -57,7 +57,7 @@ class enrol_delayedcohort_renderer extends plugin_renderer_base {
 
         $str = '';
         $choice = optional_param('category', 0, PARAM_INT);
-        $categories = coursecat::make_categories_list();
+        $categories = \core_course_category::make_categories_list();
         $str .= $OUTPUT->single_select($url, 'category', $categories, $choice, array('' => get_string('all', 'enrol_delayedcohort')));
 
         return $str;
