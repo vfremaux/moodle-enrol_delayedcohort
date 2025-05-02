@@ -41,17 +41,37 @@ $string['delayedcohortsplanner'] = 'Planing des cohortes différées';
 $string['enddate'] = 'Date de fin d\'inscription';
 $string['endsat'] = 'Finit le {$a}';
 $string['enrolcohort'] = 'Inscrire une cohorte différée';
+$string['enrolenddate'] = 'Date de clôture';
+$string['enrolenddate_help'] = 'Si elle n\'est pas définie, les utilisateurs auront toujours accès au cours même après la date de fin administrative.';
+$string['enrolstartdate'] = 'Date de mise en place';
+$string['enrolstartdate_help'] = 'Si elle n\'est pas définie, le comportement sera équivalent au plugin d\'inscription par cohorte standard.';
 $string['endsatcontinue'] = 'Finit le {$a} (sans désinscription)';
 $string['enrolsync_task'] = 'Synchronisation des cohortes différées';
 $string['event_delayedcohort_created'] = 'Instance de cohorte différée créée ';
 $string['event_delayedcohort_deleted'] = 'Instance de cohorte différée supprimée ';
 $string['event_delayedcohort_ended'] = 'Cohort différée désactivée ';
 $string['event_delayedcohort_enrolled'] = 'Cohorte différée activée ';
+$string['createfromcohort'] = 'Créer le groupe à partir de la cohorte';
+$string['createfromform'] = 'Créer le groupe avec les infos ci-dessous';
+$string['groupidnumber'] = "Numéro d'ientification du groupe";
+$string['groupidnumber_help'] = "Veillez à l'unicité de l'identifiant de groupe";
+$string['groupname'] = "Nom du groupe";
+$string['grouppropmode'] = 'Mode de propagation du groupe';
+$string['grouppropmode_help'] = '
+Vous pouvez ici choisir de créer un nouveau groupe à partir des informations de cohorte ou 
+à partir de données renseignées dans le formulaire, ou choisir un groupe existant pour y ajouter
+les utilisateurs lors du démarrage de la synchronisation.
+';
 $string['instanceexists'] = 'La cohorte est déjà synchronisée sur ce rôle';
+$string['legalstartdate'] = 'Date administrative de début de formation (pour les rapports)';
+$string['legaldate'] = 'Dates administratives';
+$string['legaldate_help'] = 'Cette date peut figurer sur des documents générés par le plugin Attestation de Formation. Par défaut ces dates prennent les valeurs de la période d\'inscription.';
+$string['legalenddate'] = 'Date administrative de fin de formation (pour les rapports)';
 $string['manageenrols'] = 'Gérer toutes les inscriptions';
 $string['noprogrammablecohorts'] = 'Pas de cohortes programmables';
 $string['notenabled'] = 'La méthode d\'inscription Cohortes Différées n\'est pas activée dans l\'administration centrale de Moodle.';
 $string['notifyto'] = 'Notifier à';
+$string['noend'] = 'Pas de fin';
 $string['plannedcourses'] = 'Planning des cours';
 $string['planner'] = 'Planning d\'activation des cohortes';
 $string['pluginname'] = 'Synchronisation différée des cohortes';

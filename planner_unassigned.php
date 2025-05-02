@@ -36,7 +36,7 @@ $plannedcourses = array();
 $enrols = enrol_delayedcohort_get_planned_enrols($plannedcourses, true);
 if (empty($plannedcourses)) {
     $sql = '1 = 1';
-    $params = array();
+    $params = [];
 } else {
     list($sql, $params) = $DB->get_in_or_equal($plannedcourses, SQL_PARAMS_QM, 'param', false);
 }

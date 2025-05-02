@@ -40,14 +40,17 @@ require_login();
 require_capability('enrol/delayedcohort:plan', $context);
 $renderer = $PAGE->get_renderer('enrol_delayedcohort');
 
-$url = new moodle_url('/enrol/delayedcohort/planner.php', array('view' => $view));
+$url = new moodle_url('/enrol/delayedcohort/planner.php', ['view' => $view]);
 $PAGE->set_url($url);
 $PAGE->set_heading(get_string('pluginname', 'enrol_delayedcohort'));
 $PAGE->set_pagelayout('base');
 $PAGE->navbar->add(get_string('pluginname', 'enrol_delayedcohort'));
 
 if ($action) {
-    include($CFG->dirroot.'/enrol/delayedcohort/planner.controller.php');
+    include($CFG->dirroot.'/enrol/delayedcohort/classes/controller/planner_controller.class.php');
+    $controller = new planner_controller();
+    $controller->receive($action);
+    $controller->process();
 }
 
 if (!enrol_is_enabled('delayedcohort')) {
@@ -71,5 +74,5 @@ switch ($view) {
         break;
 
     default:
-        print_error('badview', 'enrol_delayedcohort');
+        throw new moodle_exception('badview', 'enrol_delayedcohort');
 }

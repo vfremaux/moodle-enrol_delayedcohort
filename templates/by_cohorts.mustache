@@ -1,0 +1,47 @@
+{{!
+}}
+<!-- enrol_delayedcohort/by_cohorts -->
+<div class="outer bycohort">
+    <div class="inner bycohort">
+        <table class="bycohort">
+            <tr>
+                <th>
+                </th>
+                {{#courses}}
+                <td>
+                    <a href="{{{courseurl}}}">{{shortname}}</a>
+                </td>
+                {{/courses}}
+            </tr>
+
+            {{#cohorts}}
+            <tr>
+            <th>
+                {{name}}<br/>
+                <span class="delayedcohort-smalltext">{{count}} {{#str}}users{{/str}}</span>
+            </th>
+            {{#courses}}
+            <td class="header">
+                {{#hasenrols}}
+                {{#enrols}}
+                <div class="{{#class}}">
+                    <a href="'.$instanceurl.'">{{startdate}}</a> ({{rolename}})
+                    <div style="float:left">
+                        <img title="{{{linkurl}}}" src="{{hasendingimg}}" />
+                    </div>
+                    <a href="{{{deleteurl}}}" style="float:right" alt="{{#str}}delete{{/str}}"><img src="{{#pix}}t/delete{{/pix}}"></a>
+                    </div>
+                {{/enrols}}
+                {{/hasenrols}}
+                {{^hasenrols}}
+                    <a href="{{{addurl}}}"><img class="enrol-slot" src="{{unplannedurl}}"></a>
+                {{/hasenrols}}
+                </td>
+                {{/courses}}
+            </tr>
+            {{/cohorts}}
+
+        </table>
+    </div>
+</div>
+<!-- /enrol_delayedcohort/by_cohorts -->
