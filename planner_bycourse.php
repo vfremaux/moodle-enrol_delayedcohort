@@ -64,7 +64,7 @@ if (empty($enrols)) {
 
         $params = ['what' => 'delete', 'id' => $e->id, 'sesskey' => sesskey()];
         $deleteurl = new moodle_url('/enrol/delayedcohort/planner.php', $params);
-        $cmd .= ' <a href="'.$deleteurl.'" style="float:right">'.$OUTPUT->pix_icon('t/delete', get_string('delete')).'</a></div>';
+        $cmd .= ' <a href="'.$deleteurl.'" style="float:right">'.$OUTPUT->pix_icon('t/delete').'</a></div>';
         $row[] = $cmd;
         
         $table->data[] = $row;

@@ -25,11 +25,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2025021900;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2025021901;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2020060900;        // Requires this Moodle version.
 $plugin->component = 'enrol_delayedcohort';    // Full name of the plugin (used for diagnostics).
-$plugin->release = '4.1.0 (Build 2025021900)';
+$plugin->release = '4.5.0 (Build 2025021901)';
 $plugin->maturity = MATURITY_RC;
 
 // Non Moodle attributes.
-$plugin->codeincrement = '4.1.0000';
+$plugin->codeincrement = '4.5.0000';

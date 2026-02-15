@@ -18,6 +18,7 @@
  * Adds instance form
  *
  * @package enrol_delayedcohort
+ * @category  enrol
  * @author Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright 2015 Valery Fremaux {@link http://www.mylearningfactory.com}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

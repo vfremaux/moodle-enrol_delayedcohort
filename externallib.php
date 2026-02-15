@@ -221,7 +221,7 @@ class enrol_delayedcohort_external extends external_api {
                         'name' => new external_value(PARAM_TEXT, 'Name of the instance'),
                         'cohortid' => new external_value(PARAM_TEXT, 'id of the cohort, id or idnumber'),
                         'roleid' => new external_value(PARAM_TEXT, 'identifier of the role'),
-                        'grouppropmode' => new external_value(PARAM_TEXT, 'Group sync mode, 0: nothing, -1: create from cohort name, -2: create from group info'),
+                        'grouppropmode' => new external_value(PARAM_TEXT, 'Group sync mode'),
                         'enrolstartdate' => new external_value(PARAM_INT, 'Start of enrolment'),
                         'enrolenddate' => new external_value(PARAM_INT, 'End of enrolment'),
                         'legalstartdate' => new external_value(PARAM_INT, 'Legal start of enrolment (for reports)'),
